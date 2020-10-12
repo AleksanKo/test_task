@@ -1,6 +1,16 @@
+import argparse
 import xml.etree.ElementTree as etree
 from datetime import datetime
 import pandas as pd
+
+parser = argparse.ArgumentParser(description='Parsing file')
+
+parser.add_argument('file', help='a path to the file to be parsed')
+parser.add_argument('csv', help='a path to the CSV file where to save the results')
+parser.add_argument('--filter', choices=['name','dates'], help='choose to filter by name or by dates')
+parser.add_argument('--dates', nargs="+", help='filter by two dates')
+
+args = parser.parse_args()
 
 def parse_date(line):
     date = datetime.strptime(line,'%d-%m-%Y %H:%M:%S').strftime('%d-%m-%Y')
@@ -15,21 +25,12 @@ def count_time(start,end):
     end_time = datetime.strptime(end, '%d-%m-%Y %H:%M:%S')
     return end_time - start_time
 
-def filter_by_name(name):
-    pass
+def filter_by_name(df, name):
+    return df[df['Persons'] == name] if name in list(df['Persons']) else 'No such person'
 
-
-def filter_by_dates(df, *dates):
-    if len(dates) == 2:
-        mask = (df['Dates'] >= dates[0]) & (df['Dates'] <= dates[1])
-        print(df.loc[mask])
-        print(type(dates))
-        return df.loc[mask]
-    if type(dates) == str:
-        print(df[df['Dates']==dates])
-        return df[df['Dates']==dates]
-    else:
-        print('lol')
+def filter_by_dates(df, dates):
+    mask = (df['Dates'] >= dates[0]) & (df['Dates'] <= dates[1])
+    return df.loc[mask]
 
 def main():
 
@@ -55,10 +56,11 @@ def main():
     df['Dates'] = pd.to_datetime(df['Dates'])
 
     print(df.head())
-    #the most importnant part - make a function? or return?
     print(df.groupby('Dates').agg({'Time':'sum'}))
 
-    filter_by_dates(df,'2011-12-21','2019-12-22')
+    #filter_by_dates(df,'2011-12-21','2019-12-22')
+    #filter_by_name(df,'i.ivnov')
+
 if __name__ == '__main__':
     main()
 
