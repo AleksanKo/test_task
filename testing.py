@@ -23,11 +23,24 @@ class TestParseDate(unittest.TestCase):
         result = parse_date(date)
         self.assertEqual(result, '21-12-2011')
 
-    def test_parse_wrong_date(self):
-        date = '12-21-2011 10:54:47'
-        with self.assertRaises(ValueError):
-            result = parse_date(date)
+class TestParseTime(unittest.TestCase):
+    def test_parse_time(self):
+        date = '21-12-2011 10:54:47'
+        result = parse_time(date)
+        self.assertEqual(result, '10:54:47')
 
+class TestCountTime(unittest.TestCase):
+    def test_count_time(self):
+        start = '21-12-2011 10:54:47'
+        end = '21-12-2011 18:54:47'
+        result = count_time(start, end)
+        self.assertEqual(result, datetime.timedelta(0, 28800))
+
+    def test_count_zero_time(self):
+        start = '21-12-2011 10:54:47'
+        end = '21-12-2011 10:54:47'
+        result = count_time(start, end)
+        self.assertEqual(result, datetime.timedelta(0))
 
 if __name__ == '__main__':
     unittest.main()
