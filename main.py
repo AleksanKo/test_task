@@ -6,8 +6,8 @@ import pandas as pd
 parser = argparse.ArgumentParser(description='Parsing file')
 
 parser.add_argument('file', help='a path to the file to be parsed')
-parser.add_argument('-n','--name', help='filter by name')
-parser.add_argument('-d','--dates', nargs="+", help='filter by two dates')
+parser.add_argument('-n', '--name', help='filter by name')
+parser.add_argument('-d', '--dates', nargs="+", help='filter by two dates')
 
 args = parser.parse_args()
 
@@ -23,7 +23,7 @@ def parse_time(line):
     time = datetime.strptime(line, '%d-%m-%Y %H:%M:%S').strftime('%H:%M:%S')
     return time
 
-def count_time(start,end):
+def count_time(start, end):
     start_time = datetime.strptime(start, '%d-%m-%Y %H:%M:%S')
     end_time = datetime.strptime(end, '%d-%m-%Y %H:%M:%S')
     return end_time - start_time
